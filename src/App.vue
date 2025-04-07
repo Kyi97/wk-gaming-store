@@ -4,6 +4,7 @@ import { RouterView } from "vue-router";
 import SideBar from "./components/SideBar.vue";
 import Login from "./pages/Login.vue";
 import "./assets/main.css";
+import { isEditing } from "./composables/useAppState";
 
 const isMobile = ref(false);
 
@@ -27,10 +28,16 @@ onBeforeMount(() => {
 <template>
   <div
     class="grid"
-    :class="isMobile ? 'grid-cols-1' : 'grid-cols-[0.5fr_2.5fr]'"
+    :class="[
+      isMobile
+        ? 'grid-cols-1'
+        : isEditing
+        ? 'grid-cols-1'
+        : 'grid-cols-[0.5fr_2.5fr]',
+    ]"
     v-if="$route.path !== '/'"
   >
-    <SideBar v-if="!isMobile" />
+    <SideBar v-if="!isMobile && !isEditing" />
     <div class="bg-gray-100">
       <RouterView class="py-2 px-2 min-h-11/12 m-10" />
     </div>

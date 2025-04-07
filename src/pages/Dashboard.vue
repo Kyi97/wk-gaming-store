@@ -1,8 +1,38 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
 import DoughnutChart from "../components/DoughnutChart.vue";
 import LineChart from "../components/LineChart.vue";
 import BarChart from "../components/BarChart.vue";
+import { incomeService } from "../services/incomeService";
+
+const router = useRouter();
+
+//Income page
+const goToIncome = () => {
+  router.push("/income");
+};
+
+//Expense page
+const goToExpense = () => {
+  router.push("/expense");
+};
+
+const totalIncome = ref(0);
+const totalExpense = ref(0);
+
+const fetchTotalIncome = async () => {
+  try {
+    totalIncome.value =
+      await incomeService.calculateTotalIncomeForCurrentMonth();
+  } catch (error) {
+    console.error("Error fetching total income:", error);
+  }
+};
+
+onMounted(() => {
+  fetchTotalIncome();
+});
 
 // Pie Chart One
 const chartData = ref({
@@ -200,8 +230,12 @@ const barChartOptions = ref({
       <div>
         <div
           class="bg-white w-full h-[8.5rem] rounded-2xl flex flex-col justify-center items-center"
+          @click="goToIncome"
         >
           <h1 class="text-lg font-bold">Income</h1>
+          <p class="text-xl font-semibold text-green-600 mt-2">
+            ${{ totalIncome.toFixed(2) }}
+          </p>
         </div>
         <div
           class="bg-white w-full h-[8.5rem] rounded-2xl mt-4 flex flex-col justify-center items-center"
@@ -212,8 +246,12 @@ const barChartOptions = ref({
       <div>
         <div
           class="bg-white w-full h-[8.5rem] rounded-2xl flex flex-col justify-center items-center"
+          @click="goToExpense"
         >
           <h1 class="text-lg font-bold">Expenses</h1>
+          <p class="text-xl font-semibold text-red-600 mt-2">
+            ${{ totalExpense.toFixed(2) }}
+          </p>
         </div>
         <div
           class="bg-white w-full h-[8.5rem] rounded-2xl mt-4 flex flex-col justify-center items-center"

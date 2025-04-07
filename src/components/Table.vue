@@ -6,6 +6,7 @@ import Column from "primevue/column";
 import InputText from "primevue/inputtext";
 import Tag from "primevue/tag";
 import type { DataTableEditingRows } from "primevue/datatable";
+import { isEditing } from "../composables/useAppState";
 
 const props = defineProps<{
   columns: Array<{
@@ -29,12 +30,21 @@ const filters = ref({
 
 const editingRows = ref([]);
 
+const onRowEditInit = () => {
+  isEditing.value = true;
+};
+
+const onRowEditCancel = () => {
+  isEditing.value = false;
+};
+
 const onRowEditSave = (event: any) => {
   const { newData, index } = event;
   const updatedData = props.data.map((item, i) =>
     i === index ? { ...newData } : item
   );
   emit("update:data", updatedData);
+  isEditing.value = false;
 };
 
 const getStatusSeverity = (status: string) => {
@@ -57,6 +67,8 @@ const getStatusSeverity = (status: string) => {
       v-model:editingRows="editingRows"
       @update:editingRows="(val) => emit('update:editingRows', val)"
       @row-edit-save="onRowEditSave"
+      @row-edit-init="onRowEditInit"
+      @row-edit-cancel="onRowEditCancel"
       paginator
       :rows="10"
       :rowsPerPageOptions="[5, 10, 20, 50]"

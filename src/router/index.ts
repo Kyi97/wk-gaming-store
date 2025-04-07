@@ -5,6 +5,8 @@ import products from "../pages/Products.vue";
 import rentListing from "../pages/RentListing.vue";
 import customers from "../pages/Customers.vue";
 import setting from "../pages/Setting.vue";
+import income from "../pages/Income.vue";
+import expense from "../pages/Expense.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -38,6 +40,16 @@ const router = createRouter({
       path: "/setting",
       name: "Setting",
       component: setting,
+    },
+    {
+      path: "/income",
+      name: "Income",
+      component: income,
+    },
+    {
+      path: "/expense",
+      name: "Expense",
+      component: expense,
     },
   ],
 });
